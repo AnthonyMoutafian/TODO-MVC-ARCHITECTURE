@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div class="todoContainer">
+        <div class="todoBox">
+            <form class="todoForm" action="/todo/create" method="post">
+                <input type="text" name="todo" placeholder="Add Todo">
+                <button type="submit">+</button>
+            </form>
+
+            <div class="todosBox">
+                <% todos.forEach(todo => { %>
+                    <div class="todo">
+                        <form action="<%= !todo.isEditing ? '/todo/edit/' + todo.id : '/todo/save/' + todo.id %>" method="post" style="display:inline;">
+                            <input
+                                class="todoInput <%= todo.isEditing ? 'editableTodo' : '' %> <%= todo.isChecked ? 'checkedTodo' : '' %>"
+                                type="text"
+                                value="<%= todo.todo %>"
+                                name="todo"
+                                <%= !todo.isEditing ? "disabled" : "" %>
+                            >
+                            <% if (!todo.isChecked) { %>
+                            <button type="submit" class="editBtn">
+                                <% if (!todo.isEditing) { %>
+                                    <i class="bi bi-pencil-fill"></i>
+                                <% } else { %>
+                                    <i class="bi bi-floppy"></i>
+                                <% } %>
+                            </button>
+                            <% } %>
+                        </form>
+                        
+
+                        <div>
+                            <% if (!todo.isChecked) { %>
+
+                                <form action="/todo/done/<%= todo.id %>" method="post" style="display:inline;">
+                                    <button type="submit" class="doneBtn">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </button>
+                                </form>
+                                
+                            <% } %>
+
+                            <form action="/todo/delete/<%= todo.id %>" method="post" style="display:inline;">
+                                <button type="submit" class="deleteBtn">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <form action="/api/logout" method="post">
+                <button class="logOutBtn">LogOut</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
